@@ -107,6 +107,6 @@ void HudRenderer::drawText(QPainter &p, int x, int y, const QString &text, int a
   QRect real_rect = p.fontMetrics().boundingRect(text);
   real_rect.moveCenter({x, y - real_rect.height() / 2});
 
-  p.setPen(QColor(0xff, 0xff, 0xff, alpha));
+  p.setPen(QColor(0x80, 0x80, 0xff, alpha));
   p.drawText(real_rect.x(), real_rect.bottom(), text);
 }
