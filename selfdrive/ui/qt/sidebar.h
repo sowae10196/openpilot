@@ -38,7 +38,7 @@ protected:
   void drawMetric(QPainter &p, const QPair<QString, QString> &label, QColor c, int y);
 
   QPixmap home_img, flag_img, settings_img, mic_img, link_img;
-  bool onroad, recording_audio, flag_pressed, settings_pressed, mic_indicator_pressed;
+  bool onroad, recording_audio, flag_pressed, settings_pressed, mic_indicator_pressed, test_button_pressed, test_button_toggled;
   const QMap<cereal::DeviceState::NetworkType, QString> network_type = {
     {cereal::DeviceState::NetworkType::NONE, tr("--")},
     {cereal::DeviceState::NetworkType::WIFI, tr("Wi-Fi")},
@@ -52,6 +52,7 @@ protected:
   const QRect home_btn = QRect(60, 860, 180, 180);
   const QRect settings_btn = QRect(50, 35, 200, 117);
   const QRect mic_indicator_btn = QRect(158, 252, 75, 40);
+  const QRect test_btn = QRect(30, 812, 240, 126);
   const QColor good_color = QColor(255, 255, 255);
   const QColor warning_color = QColor(218, 202, 37);
   const QColor danger_color = QColor(201, 34, 49);

@@ -52,12 +52,15 @@ void Sidebar::mousePressEvent(QMouseEvent *event) {
   } else if (recording_audio && mic_indicator_btn.contains(event->pos())) {
     mic_indicator_pressed = true;
     update();
+  } else if (test_btn.contains(event->pos())) {
+    test_button_pressed = true;
+    update();
   }
 }
 
 void Sidebar::mouseReleaseEvent(QMouseEvent *event) {
-  if (flag_pressed || settings_pressed || mic_indicator_pressed) {
-    flag_pressed = settings_pressed = mic_indicator_pressed = false;
+  if (flag_pressed || settings_pressed || mic_indicator_pressed || test_button_pressed) {
+    flag_pressed = settings_pressed = mic_indicator_pressed = test_button_pressed = false;
     update();
   }
   if (onroad && home_btn.contains(event->pos())) {
@@ -68,6 +71,8 @@ void Sidebar::mouseReleaseEvent(QMouseEvent *event) {
     emit openSettings();
   } else if (recording_audio && mic_indicator_btn.contains(event->pos())) {
     emit openSettings(2, "RecordAudio");
+  } else if (test_btn.contains(event->pos())) {
+    test_button_toggled = !test_button_toggled;
   }
 }
 
@@ -162,4 +167,10 @@ void Sidebar::paintEvent(QPaintEvent *event) {
   drawMetric(p, temp_status.first, temp_status.second, 338);
   drawMetric(p, panda_status.first, panda_status.second, 496);
   drawMetric(p, connect_status.first, connect_status.second, 654);
+
+  // test button
+  p.setOpacity(test_button_pressed ? 0.65 : 1.0);
+  QColor test_color = test_button_toggled ? QColor(0, 255, 0) : good_color;
+  drawMetric(p, {"TEST", "BUTTON"}, test_color, 812);
+  p.setOpacity(1.0);
 }
