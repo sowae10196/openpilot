@@ -1,6 +1,7 @@
 import os
 import operator
 import platform
+import subprocess
 
 from cereal import car
 from openpilot.common.params import Params
@@ -55,6 +56,31 @@ def only_onroad(started: bool, params: Params, CP: car.CarParams) -> bool:
 def only_offroad(started: bool, params: Params, CP: car.CarParams) -> bool:
   return not started
 
+def check_internet_ping(host="8.8.8.8", timeout=1.0) -> bool:
+  try:
+    result = subprocess.run(
+      ["ping", "-c", "1", "-W", str(int(timeout * 1000)), host],
+      stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
+    )
+    return result.returncode == 0
+  except Exception as e:
+    print(f"Ping check failed: {e}")
+    return False
+
+def only_on_wifi(started: bool, params: Params, CP: car.CarParams) -> bool:
+  try:
+    net_type = HARDWARE.get_network_type()
+    on_wifi = (net_type == log.DeviceState.NetworkType.wifi)
+  except Exception:
+    on_wifi = False
+    net_type = None
+
+  has_internet = check_internet_ping()
+
+  print(f"only_on_wifi: started={started}, wifi={on_wifi}, has_internet={has_internet}, type={net_type}")
+  return started and on_wifi and has_internet
+
+
 def or_(*fns):
   return lambda *args: operator.or_(*(fn(*args) for fn in fns))
 
@@ -105,7 +131,7 @@ procs = [
   PythonProcess("hardwared", "system.hardware.hardwared", always_run),
   PythonProcess("tombstoned", "system.tombstoned", always_run, enabled=not PC),
   PythonProcess("updated", "system.updated.updated", only_offroad, enabled=not PC),
-  PythonProcess("uploader", "system.loggerd.uploader", always_run),
+  PythonProcess("uploader", "system.loggerd.uploader", only_on_wifi),
   PythonProcess("statsd", "system.statsd", always_run),
   PythonProcess("feedbackd", "selfdrive.ui.feedback.feedbackd", only_onroad),
 
