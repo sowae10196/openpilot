@@ -130,6 +130,26 @@ const EncoderInfo qcam_encoder_info = {
   INIT_ENCODE_FUNCTIONS(QRoadEncode),
 };
 
+const EncoderInfo wide_cam_encoder_info = {
+  .publish_name = "qWideRoadEncodeData",
+  .filename = "wide_camera.ts",
+  .get_settings = [](int){return EncoderSettings::QcamEncoderSettings();},
+  .frame_width = 526,
+  .frame_height = 330,
+  .include_audio = Params().getBool("RecordAudio"),
+  INIT_ENCODE_FUNCTIONS(WideRoadEncode),
+};
+
+const EncoderInfo driver_cam_encoder_info = {
+  .publish_name = "qDriverEncodeData",
+  .filename = "driver_camera.ts",
+  .get_settings = [](int){return EncoderSettings::QcamEncoderSettings();},
+  .frame_width = 526,
+  .frame_height = 330,
+  .include_audio = Params().getBool("RecordAudio"),
+  INIT_ENCODE_FUNCTIONS(DriverEncode),
+};
+
 const LogCameraInfo road_camera_info{
   .thread_name = "road_cam_encoder",
   .stream_type = VISION_STREAM_ROAD,
@@ -139,13 +159,13 @@ const LogCameraInfo road_camera_info{
 const LogCameraInfo wide_road_camera_info{
   .thread_name = "wide_road_cam_encoder",
   .stream_type = VISION_STREAM_WIDE_ROAD,
-  .encoder_infos = {main_wide_road_encoder_info}
+  .encoder_infos = {main_wide_road_encoder_info, wide_cam_encoder_info}
 };
 
 const LogCameraInfo driver_camera_info{
   .thread_name = "driver_cam_encoder",
   .stream_type = VISION_STREAM_DRIVER,
-  .encoder_infos = {main_driver_encoder_info}
+  .encoder_infos = {main_driver_encoder_info, driver_cam_encoder_info}
 };
 
 const LogCameraInfo stream_road_camera_info{

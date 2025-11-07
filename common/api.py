@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, UTC
 from openpilot.system.hardware.hw import Paths
 from openpilot.system.version import get_version
 
-API_HOST = os.getenv('API_HOST', 'https://api.commadotai.com')
+API_HOST = os.getenv('API_HOST', 'http://192.168.2.109:8080')
 
 class Api:
   def __init__(self, dongle_id):
@@ -42,5 +42,6 @@ def api_get(endpoint, method='GET', timeout=None, access_token=None, **params):
     headers['Authorization'] = "JWT " + access_token
 
   headers['User-Agent'] = "openpilot-" + get_version()
-
+  url = API_HOST + "/" + endpoint
+  print(">>> API call:", method, url)
   return requests.request(method, API_HOST + "/" + endpoint, timeout=timeout, headers=headers, params=params)

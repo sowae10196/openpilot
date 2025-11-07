@@ -2563,6 +2563,8 @@ struct Event {
     driverEncodeIdx @76 :EncodeIndex;
     wideRoadEncodeIdx @77 :EncodeIndex;
     qRoadEncodeIdx @90 :EncodeIndex;
+    qDriverEncodeIdx @150 :EncodeIndex;
+    qWideRoadEncodeIdx @151 :EncodeIndex;
 
     livestreamRoadEncodeIdx @117 :EncodeIndex;
     livestreamWideRoadEncodeIdx @118 :EncodeIndex;
@@ -2605,6 +2607,8 @@ struct Event {
     driverEncodeData @87 :EncodeData;
     wideRoadEncodeData @88 :EncodeData;
     qRoadEncodeData @89 :EncodeData;
+    qDriverEncodeData @152 :EncodeData;
+    qWideRoadEncodeData @153 :EncodeData;
     alertDebug @133 :DebugAlert;
 
     livestreamRoadEncodeData @120 :EncodeData;
