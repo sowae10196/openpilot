@@ -5,7 +5,7 @@ from datetime import datetime, timedelta, UTC
 from openpilot.system.hardware.hw import Paths
 from openpilot.system.version import get_version
 
-API_HOST = os.getenv('API_HOST', 'http://192.168.2.109:8080')
+API_HOST = os.getenv('API_HOST', 'http://10.252.218.250:8080')
 
 class Api:
   def __init__(self, dongle_id):
