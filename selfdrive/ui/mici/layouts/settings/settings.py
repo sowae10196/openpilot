@@ -4,6 +4,7 @@ from enum import IntEnum
 from collections.abc import Callable
 
 from openpilot.common.params import Params
+from openpilot.selfdrive.ui.layouts.settings.software import SoftwareLayout
 from openpilot.system.ui.widgets.scroller import Scroller
 from openpilot.selfdrive.ui.mici.widgets.button import BigButton
 from openpilot.selfdrive.ui.mici.layouts.settings.toggles import TogglesLayoutMici
@@ -22,12 +23,26 @@ class PanelType(IntEnum):
   DEVELOPER = 3
   USER_MANUAL = 4
   FIREHOSE = 5
+  SOFTWARE = 6
 
 
 @dataclass
 class PanelInfo:
   name: str
   instance: Widget
+
+
+class SoftwareLayoutMici(NavWidget):
+  def __init__(self, back_callback: Callable):
+    super().__init__(back_callback)
+    self.software_layout = SoftwareLayout()
+
+  def show_event(self):
+    super().show_event()
+    self.software_layout.show_event()
+
+  def _render(self, rect: rl.Rectangle):
+    self.software_layout.render(rect)
 
 
 class SettingsLayout(NavWidget):
@@ -44,6 +59,8 @@ class SettingsLayout(NavWidget):
     device_btn.set_click_callback(lambda: self._set_current_panel(PanelType.DEVICE))
     developer_btn = BigButton("developer", "", "icons_mici/settings/developer_icon.png")
     developer_btn.set_click_callback(lambda: self._set_current_panel(PanelType.DEVELOPER))
+    software_btn = BigButton("software", "", "icons_mici/settings/developer_icon.png")
+    software_btn.set_click_callback(lambda: self._set_current_panel(PanelType.SOFTWARE))
 
     firehose_btn = BigButton("firehose", "", "icons_mici/settings/comma_icon.png")
     firehose_btn.set_click_callback(lambda: self._set_current_panel(PanelType.FIREHOSE))
@@ -55,6 +72,7 @@ class SettingsLayout(NavWidget):
       PairBigButton(),
       #BigDialogButton("manual", "", "icons_mici/settings/manual_icon.png", "Check out the mici user\nmanual at comma.ai/setup"),
       firehose_btn,
+      software_btn,
       developer_btn,
     ], snap_items=False)
 
@@ -68,6 +86,7 @@ class SettingsLayout(NavWidget):
       PanelType.DEVICE: PanelInfo("Device", DeviceLayoutMici(back_callback=lambda: self._set_current_panel(None))),
       PanelType.DEVELOPER: PanelInfo("Developer", DeveloperLayoutMici(back_callback=lambda: self._set_current_panel(None))),
       PanelType.FIREHOSE: PanelInfo("Firehose", FirehoseLayout(back_callback=lambda: self._set_current_panel(None))),
+      PanelType.SOFTWARE: PanelInfo("Software", SoftwareLayoutMici(back_callback=lambda: self._set_current_panel(None))),
     }
 
     self._font_medium = gui_app.font(FontWeight.MEDIUM)
