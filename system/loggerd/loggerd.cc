@@ -321,7 +321,7 @@ void loggerd_thread() {
         }
 
         count++;
-        if (count >= 400) {
+        if (count >= 300) {
           LOGD("large volume of '%s' messages", service.name.c_str());
           break;
         }
